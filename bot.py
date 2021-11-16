@@ -208,7 +208,20 @@ while True:
                 if id != 'nan' and frente != 'nan' and etapa != 'nan' and natureza != 'nan' and rpa != 'Processado':
                     webbrowser.open('https://indicium.bitrix24.com/workgroups/group/' + str(row['Cod projeto']) +
                                     '/tasks/task/edit/' + str(row['ID']) + '/')
-                    sleep(15)
+                    sleep(20)
+                    pyperclip.copy('')  # Teste
+                    pyautogui.hotkey('ctrl', 'a'), sleep(1)  # Teste
+                    pyautogui.hotkey('ctrl', 'c'), sleep(1)
+                    descricao = pyperclip.paste()
+                    print(descricao)
+                    if descricao != '':
+                        df1.loc[i, 'Descricao'] = descricao
+                        book = load_workbook(path_saida)
+                        writer = pd.ExcelWriter(path_saida, engine='openpyxl')
+                        writer.book = book
+                        writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
+                        df1.to_excel(writer, "Tarefas", header=True, index=False)
+                        writer.save()
                     pyautogui.click(700, 300)
                     pyautogui.hotkey('end'), sleep(1)
                     try:
@@ -217,6 +230,7 @@ while True:
                         pyautogui.hotkey('ctrl', 'f'), sleep(1)
                         pyperclip.copy('Frente de Trabalho')
                         pyautogui.hotkey('ctrl', 'v'), sleep(1)
+                        pyautogui.hotkey('esc'), sleep(1)
                         pyautogui.hotkey('tab'), sleep(1)
                         pyperclip.copy(str(row['Frente de Trabalho']))
                         pyautogui.hotkey('ctrl', 'v'), sleep(1)
@@ -255,8 +269,8 @@ while True:
                         df1.to_excel(writer, "Tarefas", header=True, index=False)
                         writer.save()
                 else:
-                    sleep(10)
-                    pyautogui.hotkey('ctrl', 'w')
+                    #sleep(10)
+                    #pyautogui.hotkey('ctrl', 'w')
                     df1.loc[i, 'RPA'] = 'Faltam dados de Frente/Etapa/Natureza'
                     book = load_workbook(path_saida)
                     writer = pd.ExcelWriter(path_saida, engine='openpyxl')
